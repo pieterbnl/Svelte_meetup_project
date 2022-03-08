@@ -1,8 +1,15 @@
 <script>
   import Header from "./UI/Header.svelte";
-  import MeetupItem from "./Meetups/MeetupItem.svelte";
+  import MeetupGrid from "./Meetups/MeetupGrid.svelte";
 
-  const meetups = [
+  let title = '';
+  let subtitle = '';
+  let address = '';
+  let email = '';
+  let description = '';
+  let imageUrl = '';
+
+  let meetups = [
     {
       id: 'm1',
       title: 'Coding Bootcamp',
@@ -17,24 +24,66 @@
       title: 'Sing along',
       subtitle: 'Let\'s sing together',
       description: 'We will sing for world peace',
-      imageUrl:'https://static.wikia.nocookie.net/spongebob/images/2/26/Bubbletown_002.png/revision/latest/scale-to-width-down/1000?cb=20181028171458',
+      imageUrl:'https://i.pinimg.com/564x/8c/82/84/8c8284bd9ff5c81c9478a8f72cb42662.jpg',
       address: '124 Conch St., Bikini Bottom',
       contactEmail: 'thedude@hisdudeness.com'
     }
-  ]
+  ];
+
+  function addMeetup() {
+    const newMeetup = {
+      id: Math.random().toString(),
+      title: title,
+      subtitle: subtitle,
+      description: description,
+      imageUrl: imageUrl,
+      contactEmail: email,
+      address: address
+    };
+
+    meetups = [...meetups, newMeetup];
+  }
 </script>
 
 <style>
-  #meetups {
+  main {
     margin-top: 5rem
   }
 </style>
 
-
 <Header />
 
-<section id="meetups">  
-  {#each meetups as meetup}
-    <MeetupItem />
-  {/each}
-</section>
+<main>
+  <!-- <MeetupGrid meetups={meetups}/> -->
+  <!-- using preventDefault so that no http requests get send
+  as all can handled on the client side -->
+  <form on:submit|preventDefault="{addMeetup}">
+    <div class="form-control">
+      <label for="title">Title</label>
+      <input type="text" id="title" bind:value={title} />
+    </div>
+    <div class="form-control">
+      <label for="subtitle">Subtitle</label>
+      <input type="text" id="subtitle" bind:value={subtitle} />
+    </div>
+    <div class="form-control">
+      <label for="address">Address</label>
+      <input type="text" id="address" bind:value={address} />
+    </div>
+    <div class="form-control">
+      <label for="imageUrl">Image Url</label>
+      <input type="text" id="imageUrl" bind:value={imageUrl} />
+    </div>
+    <div class="form-control">
+      <label for="email">E-mail</label>
+      <input type="text" id="email" bind:value={email} />
+    </div>
+    <div class="form-control">
+      <label for="description">Description</label>
+      <textarea rows="3" id="description" bind:value={description} />
+    </div>
+    <button type="submit">Save</button>   
+    
+  </form>
+  <MeetupGrid {meetups}/>  
+</main>
